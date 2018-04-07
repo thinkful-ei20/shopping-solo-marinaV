@@ -19,6 +19,7 @@ const STORE = [
 
 
 function generateItemElement(item, itemIndex, template) {
+  console.log('hi');
 	return `
 		<li class="js-item-index-element" data-item-index="${itemIndex}">
 			<span class="shopping-item js-shopping-item ${item.checked ? "shopping-item__checked" : ''}">${item.name}</span>
