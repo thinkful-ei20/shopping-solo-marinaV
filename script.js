@@ -113,7 +113,6 @@ function handleShoppingList() {
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
-
 }
 
 // when the page loads, call `handleShoppingList`
