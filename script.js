@@ -100,6 +100,53 @@ function handleFilterListChange() {
   });
 }
 
+
+// Set element property 'contentEditable' to true and bring focus
+function openEditItemMode(targetEl) {
+  console.log('openEditItemMode run');
+  targetEl.attr('contentEditable', true).focus();
+}
+
+// Stop editing mode
+function stopEditItemMode(targetEl) {
+  console.log('stopEditItemMode run');
+  targetEl.attr('contentEditable', false);
+}
+
+function updateItem(e) {
+  console.log('updateItem run');
+  const updatedItemValue = $(e.target).text();
+  const itemIndex = getItemIndexFromElement($(e.target));
+  if (STORE.items[itemIndex].name !== updatedItemValue) {
+    console.log('hi from change value');
+    STORE.items[itemIndex].name = updatedItemValue;
+  }
+}
+
+// Handle 'edit' mode for shopping list item
+function handleEditListClick() {
+  // Listen for users to click the "edit" button on a shopping list item
+  // Start editing mode in the text field
+  $('.js-shopping-list').on('click', '.js-item-edit', function(event) {
+    const elementToEdit = $(event.target).closest('.js-item-index-element').find('.js-shopping-item');
+    openEditItemMode(elementToEdit);
+  });
+  // Listen for users to change focus when editing a shopping list item
+  $('.js-shopping-list').on('focusout', '.js-shopping-item', function(event) {
+    updateItem(event);
+  });
+
+  // Listen for users to press return (enter) button when editing a shopping list item
+  // Stop editing mode in the text field
+  $('.js-shopping-list').on('keydown', '.js-shopping-item', function(event) {
+    if (event.which === 13) {
+      // prevent default 'submit' behavior that triggers 'Add' submit button
+      event.preventDefault();
+      stopEditItemMode($(event.target));
+    }
+  });
+}
+
 function toggleCheckedForListItem(itemIndex) {
 	console.log('toggleCheckedForListItem run');
 	STORE.items[itemIndex].checked = !STORE.items[itemIndex].checked;
@@ -112,8 +159,6 @@ function getItemIndexFromElement(item) {
 }
 
 function handleItemCheckClicked() {
-  // this function will be responsible for when users click the "check" button on
-  // a shopping list item.
   console.log('`handleItemCheckClicked` ran');
   $('.js-shopping-list').on('click', '.js-item-toggle', event => {
 		const itemIndex = getItemIndexFromElement($(event.target));
@@ -124,12 +169,11 @@ function handleItemCheckClicked() {
 
 function deleteItemFromList(itemIndex) {
   console.log(`Deleting item at index  ${itemIndex} from shopping list`);
-	STORE.splice(itemIndex, 1);
+	STORE.items.splice(itemIndex, 1);
 }
 
+// Handle shopping list item removal
 function handleDeleteItemClicked() {
-  // this function will be responsible for when users want to delete a shopping list
-  // item
   console.log('`handleDeleteItemClicked` ran');
 	$('.js-shopping-list').on('click', '.js-item-delete', event => {
 		console.log(event.target);
@@ -137,7 +181,6 @@ function handleDeleteItemClicked() {
 		deleteItemFromList(itemIndex);
 		renderShoppingList();
 	});
-
 }
 
 // this function will be our callback when the page loads. it's responsible for
@@ -150,6 +193,7 @@ function handleShoppingList() {
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleFilterListChange();
+  handleEditListClick();
 }
 
 // when the page loads, call `handleShoppingList`
