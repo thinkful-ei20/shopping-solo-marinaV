@@ -10,22 +10,27 @@
 // indicates if it's checked off or not.
 // we're pre-adding items to the shopping list so there's
 // something to see when the page first loads.
-const STORE = [
-  {name: "apples", checked: false},
-  {name: "oranges", checked: false},
-  {name: "milk", checked: true},
-  {name: "bread", checked: false}
-];
+const STORE = {
+  items: [
+    {name: "apples", checked: false},
+    {name: "oranges", checked: false},
+    {name: "milk", checked: true},
+    {name: "bread", checked: false}
+  ],
+  filterBy: 'all',
+};
 
 
 function generateItemElement(item, itemIndex, template) {
-  console.log('hi');
 	return `
 		<li class="js-item-index-element" data-item-index="${itemIndex}">
 			<span class="shopping-item js-shopping-item ${item.checked ? "shopping-item__checked" : ''}">${item.name}</span>
 			<div class="shopping-item-controls">
 				<button class="shopping-item-toggle js-item-toggle">
 					<span class="button-label">check</span>
+				</button>
+				<button class="shopping-item-edit js-item-edit">
+					<span class="button-label">edit</span>
 				</button>
 				<button class="shopping-item-delete js-item-delete">
 					<span class="button-label">delete</span>
@@ -44,8 +49,23 @@ function renderShoppingList() {
   // this function will be responsible for rendering the shopping list in
   // the DOM
   console.log('`renderShoppingList` ran');
-  const shoppingListItemsString = generateShoppingItemsString(STORE);
+  let storeItems = [...STORE.items];
+  switch(STORE.filterBy) {
+    case 'checked':
+      storeItems = storeItems.filter(el => el.checked);
+      break;
+    case 'unchecked':
+      storeItems = storeItems.filter(el => !el.checked);
+      break;
+  }
+
+
+  // console.log(myArr.splice(0, myArr.length, ...myArr.filter(el => el.checked)));
+  // console.log(myArr);
+
+  const shoppingListItemsString = generateShoppingItemsString(storeItems);
 	$('.js-shopping-list').html(shoppingListItemsString);
+
 }
 
 function handleNewItemSubmit() {
@@ -62,12 +82,27 @@ function handleNewItemSubmit() {
 }
 
 function addItemToShoppingList(itemName) {
-	STORE.push({ name: itemName,	checked: false });
+	STORE.items.push({ name: itemName,	checked: false });
+}
+
+function setFilterBy(filterBy) {
+  STORE.filterBy = filterBy;
+}
+
+function handleFilterListChange() {
+  console.log('filterShoppingList run');
+  $('#filter-dropdown').change(event => {
+    console.log($(event.target).find('option:selected').val());
+    // console.log($('select option:selected').val());
+    const filteredOption = $('select option:selected').val();
+    setFilterBy(filteredOption);
+    renderShoppingList();
+  });
 }
 
 function toggleCheckedForListItem(itemIndex) {
 	console.log('toggleCheckedForListItem run');
-	STORE[itemIndex].checked = !STORE[itemIndex].checked;
+	STORE.items[itemIndex].checked = !STORE.items[itemIndex].checked;
 }
 
 function getItemIndexFromElement(item) {
@@ -88,7 +123,7 @@ function handleItemCheckClicked() {
 }
 
 function deleteItemFromList(itemIndex) {
-	console.log('deleteItemFromList run');
+  console.log(`Deleting item at index  ${itemIndex} from shopping list`);
 	STORE.splice(itemIndex, 1);
 }
 
@@ -114,6 +149,7 @@ function handleShoppingList() {
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
+  handleFilterListChange();
 }
 
 // when the page loads, call `handleShoppingList`

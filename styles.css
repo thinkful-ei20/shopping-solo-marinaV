@@ -22,9 +22,17 @@ button:hover {
   width: 250px;
 }
 
+#filter-dropdown {
+  margin-top: 10px;
+}
+
 .container {
   max-width: 600px;
   margin: 0 auto;
+}
+
+label[for="shopping-list-entry"] {
+  display: block;
 }
 
 .shopping-list {
