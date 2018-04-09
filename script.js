@@ -22,6 +22,8 @@ const STORE = {
 
 
 function generateItemElement(item, itemIndex, template) {
+  console.log(item);
+  console.log(itemIndex);
 	return `
 		<li class="js-item-index-element" data-item-index="${itemIndex}">
 			<span class="shopping-item js-shopping-item ${item.checked ? "shopping-item__checked" : ''}">${item.name}</span>
@@ -58,8 +60,6 @@ function renderShoppingList() {
       storeItems = storeItems.filter(el => !el.checked);
       break;
   }
-
-
   // console.log(myArr.splice(0, myArr.length, ...myArr.filter(el => el.checked)));
   // console.log(myArr);
 
@@ -85,6 +85,30 @@ function addItemToShoppingList(itemName) {
 	STORE.items.push({ name: itemName,	checked: false });
 }
 
+function renderSearchedItem(itemName) {
+  console.log('`renderSearchedItem` ran');
+  let itemIndex;
+  STORE.items.find((obj, ind) => {
+    if  (obj.name === itemName) {
+      itemIndex = ind;
+    }
+  });
+  const searchedItemString = generateItemElement(STORE.items[itemIndex], itemIndex);
+  $('.js-shopping-list').html(searchedItemString);
+}
+
+function handleFindListItemSubmit() {
+  // this function will be responsible for when users search for items on the shopping list
+  console.log('`handleFindListItemSubmit` ran');
+  $('#js-shopping-list-form').on('click', ':button', event => {
+    console.log($(event.target));
+    const $listEntry = $('.js-shopping-list-finder');
+    const itemName = $listEntry.val();
+    renderSearchedItem(itemName);
+    $listEntry.val('');
+  });
+}
+
 function setFilterBy(filterBy) {
   STORE.filterBy = filterBy;
 }
@@ -99,7 +123,6 @@ function handleFilterListChange() {
     renderShoppingList();
   });
 }
-
 
 // Set element property 'contentEditable' to true and bring focus
 function openEditItemMode(targetEl) {
@@ -190,6 +213,7 @@ function handleDeleteItemClicked() {
 function handleShoppingList() {
   renderShoppingList();
   handleNewItemSubmit();
+  handleFindListItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleFilterListChange();

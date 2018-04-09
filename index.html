@@ -12,12 +12,12 @@
     <div class="container">
         <h1>Shopping List</h1>
         <form id="js-shopping-list-form">
-            <label for="shopping-list-entry">Add or find an item</label>
+            <label for="shopping-list-entry">Add an item</label>
             <input type="text" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="e.g., broccoli">
             <button type="submit">Add</button>
-            <!--<label for="shopping-list-finder">Find an item</label>-->
-            <!--<input type="text" name="shopping-list-finder" class="js-shopping-list-finder" placeholder="">-->
-            <button type="submit" aria-label="Search">Find</button>
+            <label for="shopping-list-finder">Find an item</label>
+            <input type="text" name="shopping-list-finder" class="js-shopping-list-finder" placeholder="">
+            <button type="button" aria-label="Search">Find</button>
         </form>
         <label for="filter-dropdown">Filter by:</label>
         <select id="filter-dropdown" name="day">
@@ -25,13 +25,12 @@
             <option value="checked">checked</option>
             <option value="unchecked">unchecked</option>
         </select>
-        <label for="sort-dropdown">Sort by:</label>
-        <select id="sort-dropdown" name="day">
-            <option value="most recent" selected>all</option>
-            <option value="A to Z">checked</option>
-            <option value="A to A">unchecked</option>
-        </select>
-
+        <!--<label for="sort-dropdown">Sort by:</label>-->
+        <!--<select id="sort-dropdown" name="day">-->
+            <!--<option value="most recent" selected>all</option>-->
+            <!--<option value="A to Z">checked</option>-->
+            <!--<option value="A to A">unchecked</option>-->
+        <!--</select>-->
         <ul class="shopping-list js-shopping-list">
         </ul>
     </div>
